@@ -24,9 +24,14 @@ cd /home/$user/_scratch2/sam_road/
 bash install.sh
 ```
 
+Перейдите по пути и всё закомментируйте в __init__.py
+```
+cd /misc/home6/$user/sam_road/sam/segment_anything/modeling/__init__.py
+```
+
 Перейдите по пути и закомментируйте в conftest.py, раздел связанный с nx-loopback 
 ```
-/misc/home6/$user/sam_road/segm_models/lib64/python3.9/site-packages/networkx/conftest.py
+cd /misc/home6/$user/sam_road/segm_models/lib64/python3.9/site-packages/networkx/conftest.py
 ```
 ![image](https://github.com/kurdt23/sam_road/assets/148371058/6f321023-c285-47f9-bb96-52aede68fc6c)
 
