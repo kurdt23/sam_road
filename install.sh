@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#подклучение к виртуальному пространству
+#подключение к виртуальному пространству
 python3.9 -m venv segm_models
 source segm_models/bin/activate
 
 # установка библиотек
 python -m pip install --upgrade pip
-pip install requirements.txt
+pip install -r requirements.txt
 git clone https://github.com/facebookresearch/detectron2.git
 python -m pip install -e detectron2
 pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cpu/torch1.8/index.html
