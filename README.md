@@ -13,12 +13,16 @@ source segm_models/bin/activate
 ```
 
 Перейти в папку проекта, где $user имя вашего пользователя на кластере
-```cd /home/$user/_scratch2/sam_road/```
+```
+cd /home/$user/_scratch2/sam_road/
+```
 > p.s. узнать свое имя на кластере
 > ```whoami```
 
 Выполнить запуск скрипта для установки модели, датасета и библиотек
-```bash install.sh```
+```
+bash install.sh
+```
 
 
 ### Регистрация на wandb
@@ -27,13 +31,17 @@ source segm_models/bin/activate
 3. После входа в систему, наведите курсор мыши на свой профиль в правом верхнем углу страницы и выберите "Настройки" или "Settings".
 4. В разделе "Profile" или "Профиль" вы найдете ваш API ключ.
 5. В консоле введите и далее свой API ключ
-```wandb login```
+```
+wandb login
+```
 
 В дальнейшем на этом сайте, можно отслеживать результаты обучения по графикам.
 
 
 Перейдите по пути и закомментируйте в conftest.py, раздел связанный с nx-loopback 
-```/misc/home6/$user/sam_road/segm_models/lib64/python3.9/site-packages/networkx/conftest.py```
+```
+/misc/home6/$user/sam_road/segm_models/lib64/python3.9/site-packages/networkx/conftest.py
+```
 ![image](https://github.com/kurdt23/sam_road/assets/148371058/6f321023-c285-47f9-bb96-52aede68fc6c)
 
 ### Запуск обучения
