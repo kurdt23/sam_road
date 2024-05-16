@@ -11,11 +11,16 @@ from functools import partial
 from torchmetrics.classification import BinaryJaccardIndex, F1Score, BinaryPrecisionRecallCurve
 
 import lightning.pytorch as pl
-from sam.segment_anything.modeling.image_encoder import ImageEncoderViT
-from sam.segment_anything.modeling.mask_decoder import MaskDecoder
-from sam.segment_anything.modeling.prompt_encoder import PromptEncoder
-from sam.segment_anything.modeling.transformer import TwoWayTransformer
-from sam.segment_anything.modeling.common import LayerNorm2d
+
+# если не запускается измените путь к папке, добавив свое имя пользователя на кластере
+import sys
+sys.path.append('/misc/home6/$user/sam_road/sam/segment_anything')
+
+from modeling.image_encoder import ImageEncoderViT
+from modeling.mask_decoder import MaskDecoder
+from modeling.prompt_encoder import PromptEncoder
+from modeling.transformer import TwoWayTransformer
+from modeling.common import LayerNorm2d
 
 import wandb
 import pprint
