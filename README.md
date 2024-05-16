@@ -24,6 +24,11 @@ cd /home/$user/_scratch2/sam_road/
 bash install.sh
 ```
 
+Перейдите по пути и закомментируйте в conftest.py, раздел связанный с nx-loopback 
+```
+/misc/home6/$user/sam_road/segm_models/lib64/python3.9/site-packages/networkx/conftest.py
+```
+![image](https://github.com/kurdt23/sam_road/assets/148371058/6f321023-c285-47f9-bb96-52aede68fc6c)
 
 ### Регистрация на wandb
 1. Перейдите на сайт https://wandb.ai/
@@ -37,13 +42,6 @@ wandb login
 
 В дальнейшем на этом сайте, можно отслеживать результаты обучения по графикам.
 
-
-Перейдите по пути и закомментируйте в conftest.py, раздел связанный с nx-loopback 
-```
-/misc/home6/$user/sam_road/segm_models/lib64/python3.9/site-packages/networkx/conftest.py
-```
-![image](https://github.com/kurdt23/sam_road/assets/148371058/6f321023-c285-47f9-bb96-52aede68fc6c)
-
 ### Запуск обучения
 Перейти в папку проекта, включить виртуальное окружение и запустить тренировочный скрипт
 ```
@@ -52,7 +50,7 @@ python3.9 -m venv segm_models
 source segm_models/bin/activate
 bash train_sbatch.sh
 ```
-
+----------------------------------------------------------------------
 
 # Official codebase for "Segment Anything Model for Road Network Graph Extraction", CVPRW 2024
 https://arxiv.org/pdf/2403.16051.pdf
