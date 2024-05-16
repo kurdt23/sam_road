@@ -1,3 +1,51 @@
+## Инструкция для запуска на кластере
+### Предподготовка
+Перейти в папку _scratch2 и склонировать репозиторий
+```
+cd _scratch2
+git clone https://github.com/kurdt23/sam_road.git
+```
+
+Создать виртуальное окружение
+```
+python3.9 -m venv segm_models
+source segm_models/bin/activate
+```
+
+Перейти в папку проекта, где $user имя вашего пользователя на кластере
+```cd /home/$user/_scratch2/sam_road/```
+> p.s. узнать свое имя на кластере
+> ```whoami```
+
+Выполнить запуск скрипта для установки модели, датасета и библиотек
+```bash install.sh```
+
+
+### Регистрация на wandb
+1. Перейдите на сайт https://wandb.ai/
+2. Войдите в свою учетную запись или создайте новую, если у вас ее еще нет (можно через гитхаб войти и указать цель создания аккаунта для учебы)
+3. После входа в систему, наведите курсор мыши на свой профиль в правом верхнем углу страницы и выберите "Настройки" или "Settings".
+4. В разделе "Profile" или "Профиль" вы найдете ваш API ключ.
+5. В консоле введите и далее свой API ключ
+```wandb login```
+
+В дальнейшем на этом сайте, можно отслеживать результаты обучения по графикам.
+
+
+Перейдите по пути и закомментируйте в conftest.py, раздел связанный с nx-loopback 
+```/misc/home6/$user/sam_road/segm_models/lib64/python3.9/site-packages/networkx/conftest.py```
+![image](https://github.com/kurdt23/sam_road/assets/148371058/6f321023-c285-47f9-bb96-52aede68fc6c)
+
+### Запуск обучения
+Перейти в папку проекта, включить виртуальное окружение и запустить тренировочный скрипт
+```
+cd /home/$user/_scratch2/sam_road/
+python3.9 -m venv segm_models
+source segm_models/bin/activate
+bash train_sbatch.sh
+```
+
+
 # Official codebase for "Segment Anything Model for Road Network Graph Extraction", CVPRW 2024
 https://arxiv.org/pdf/2403.16051.pdf
 
