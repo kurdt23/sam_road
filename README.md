@@ -46,7 +46,8 @@ wandb login
 ```
 
 > В дальнейшем на этом сайте, можно отслеживать результаты обучения по графикам, перейдя по ссылке из файла с логами, пример:
-> ![image](https://github.com/kurdt23/sam_road/assets/148371058/deb794b2-1efd-49d5-b03e-dacbd8c00fb4)
+>
+>  ![image](https://github.com/kurdt23/sam_road/assets/148371058/deb794b2-1efd-49d5-b03e-dacbd8c00fb4)
 
 
 
@@ -58,6 +59,9 @@ python3.9 -m venv segm_models
 source segm_models/bin/activate
 bash train_sbatch.sh
 ```
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&duration=3000&pause=2000&color=F711B4&random=false&width=1200&lines=%D0%95%D1%81%D0%BB%D0%B8%2C+%D0%B2%D1%81%D0%B5+%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D0%BB%D0%B8+%D0%B2%D0%B5%D1%80%D0%BD%D0%BE+%D0%B8+%D0%B2+%D0%BB%D0%BE%D0%B3%D0%B0%D1%85+%D0%BF%D0%BE%D1%8F%D0%B2%D0%B8%D0%BB%D0%B8%D1%81%D1%8C+%D1%81%D1%82%D1%80%D0%BE%D0%BA%D0%B8+%D1%81+%D1%8D%D0%BF%D0%BE%D1%85%D0%B0%D0%BC%D0%B8%2C+%D0%BF%D0%BE%D0%B7%D0%B4%D1%80%D0%B0%D0%B2%D0%BB%D1%8F%D1%8E!+You're+breathtaking!+%E2%9C%A8)](https://git.io/typing-svg)
+Если, все сделали верно и в логах появились строки с эпохами, поздравляю! You're breathtaking! ✨
+
 ----------------------------------------------------------------------
 
 # Official codebase for "Segment Anything Model for Road Network Graph Extraction", CVPRW 2024
