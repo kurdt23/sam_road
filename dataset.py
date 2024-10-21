@@ -52,7 +52,22 @@ def spacenet_data_partition():
     test_list = data_list['test']
     return train_list, val_list, test_list
 
+# ekb
 
+def ekb_data_partition():
+    # dataset partition
+    with open('./ekb/data_split.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list    
+    
+    
 def get_patch_info_one_img(image_index, image_size, sample_margin, patch_size, patches_per_edge):
     patch_info = []
     sample_min = sample_margin
