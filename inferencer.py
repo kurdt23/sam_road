@@ -126,13 +126,15 @@ def infer_one_img(net, img, config):
                 continue  # Начальные координаты вне изображения
             
             if y1 > fused_keypoint_mask.shape[0]:
-                keypoint_patch = keypoint_patch[:fused_keypoint_mask.shape[0] - y0, :]
-                road_patch = road_patch[:fused_keypoint_mask.shape[0] - y0, :]
+                valid_height = fused_keypoint_mask.shape[0] - y0
+                keypoint_patch = keypoint_patch[:valid_height, :]
+                road_patch = road_patch[:valid_height, :]
                 y1 = fused_keypoint_mask.shape[0]
         
             if x1 > fused_keypoint_mask.shape[1]:
-                keypoint_patch = keypoint_patch[:, :fused_keypoint_mask.shape[1] - x0]
-                road_patch = road_patch[:, :fused_keypoint_mask.shape[1] - x0]
+                valid_width = fused_keypoint_mask.shape[1] - x0
+                keypoint_patch = keypoint_patch[:, :valid_width]
+                road_patch = road_patch[:, :valid_width]
                 x1 = fused_keypoint_mask.shape[1]
         
             # Пропускаем патчи, если их размер стал равным 0
