@@ -7,6 +7,7 @@ import cv2
 from utils import load_config, create_output_dir_and_save_config
 from dataset import cityscale_data_partition, read_rgb_img, get_patch_info_one_img
 from dataset import spacenet_data_partition
+from dataset import ekb_data_partition
 from model import SAMRoad
 import graph_extraction
 import graph_utils
@@ -31,7 +32,8 @@ parser.add_argument(
 parser.add_argument(
     "--output_dir", default=None, help="Name of the output dir, if not specified will use timestamp"
 )
-parser.add_argument("--device", default="cuda", help="device to use for training")
+parser.add_argument("--device", default="cpu", help="device to use for training")
+# parser.add_argument("--device", default="cuda", help="device to use for training")
 args = parser.parse_args()
 
 
@@ -46,13 +48,30 @@ def get_img_paths(root_dir, image_indices):
 
 
 def crop_img_patch(img, x0, y0, x1, y1):
+# CHANGES
+    img_h, img_w = img.shape[:2]
+    x0, y0 = max(0, x0), max(0, y0)
+    x1, y1 = min(img_w, x1), min(img_h, y1)
     return img[y0:y1, x0:x1, :]
+    # return img[y0:y1, x0:x1, :]
 
 
-def get_batch_img_patches(img, batch_patch_info):
+def get_batch_img_patches(img, batch_patch_info, patch_size):
     patches = []
     for _, (x0, y0), (x1, y1) in batch_patch_info:
         patch = crop_img_patch(img, x0, y0, x1, y1)
+        
+        # Проверяем, что патч имеет нужный размер
+        patch_h, patch_w = patch.shape[:2]
+        if patch_h != patch_size or patch_w != patch_size:
+            # Если размер не совпадает, дополняем до PATCH_SIZE
+            pad_h = patch_size - patch_h
+            pad_w = patch_size - patch_w
+            patch = np.pad(patch, ((0, pad_h), (0, pad_w), (0, 0)), mode='constant', constant_values=0)
+        
+        print(f'Patch shape after padding: {patch.shape}, coords: {(x0, y0, x1, y1)}')  # Отладочный вывод
+        # print(f'Patch shape: {patch.shape}, coords: {(x0, y0, x1, y1)}')  # Отладочный вывод
+        
         patches.append(torch.tensor(patch, dtype=torch.float32))
     batch = torch.stack(patches, 0).contiguous()
     return batch
@@ -88,7 +107,9 @@ def infer_one_img(net, img, config):
         offset = batch_index * batch_size
         batch_patch_info = all_patch_info[offset : offset + batch_size]
         # tensor [B, H, W, C]
-        batch_img_patches = get_batch_img_patches(img, batch_patch_info)
+# CHANGES      
+        batch_img_patches = get_batch_img_patches(img, batch_patch_info, config.PATCH_SIZE)
+        # batch_img_patches = get_batch_img_patches(img, batch_patch_info)
 
         with torch.no_grad():
             batch_img_patches = batch_img_patches.to(args.device, non_blocking=False)
@@ -99,6 +120,26 @@ def infer_one_img(net, img, config):
         for patch_index, patch_info in enumerate(batch_patch_info):
             _, (x0, y0), (x1, y1) = patch_info
             keypoint_patch, road_patch = mask_scores[patch_index, :, :, 0], mask_scores[patch_index, :, :, 1]
+# CHANGES            
+            # Проверяем, что патчи не выходят за пределы изображения и их размер больше 0
+            if y0 >= fused_keypoint_mask.shape[0] or x0 >= fused_keypoint_mask.shape[1]:
+                continue  # Начальные координаты вне изображения
+            
+            if y1 > fused_keypoint_mask.shape[0]:
+                keypoint_patch = keypoint_patch[:fused_keypoint_mask.shape[0] - y0, :]
+                road_patch = road_patch[:fused_keypoint_mask.shape[0] - y0, :]
+                y1 = fused_keypoint_mask.shape[0]
+        
+            if x1 > fused_keypoint_mask.shape[1]:
+                keypoint_patch = keypoint_patch[:, :fused_keypoint_mask.shape[1] - x0]
+                road_patch = road_patch[:, :fused_keypoint_mask.shape[1] - x0]
+                x1 = fused_keypoint_mask.shape[1]
+        
+            # Пропускаем патчи, если их размер стал равным 0
+            if keypoint_patch.shape[0] == 0 or keypoint_patch.shape[1] == 0:
+                continue
+            
+            
             fused_keypoint_mask[y0:y1, x0:x1] += keypoint_patch
             fused_road_mask[y0:y1, x0:x1] += road_patch
             pixel_counter[y0:y1, x0:x1] += torch.ones(road_patch.shape[0:2], dtype=torch.float32, device=args.device)
@@ -262,6 +303,14 @@ if __name__ == "__main__":
         rgb_pattern = './spacenet/RGB_1.0_meter/{}__rgb.png'
         gt_graph_pattern = './spacenet/RGB_1.0_meter/{}__gt_graph.p'
     
+    
+    #ekb
+    elif config.DATASET == 'ekb':
+        _, _, test_img_indices = ekb_data_partition()
+        rgb_pattern = './ekb/{}.tif'
+        gt_graph_pattern = './ekb/RGB_1.0_meter/{}__gt_graph.p'
+    
+    
     output_dir_prefix = './save/infer_'
     if args.output_dir:
         output_dir = create_output_dir_and_save_config(output_dir_prefix, config, specified_dir=f'./save/{args.output_dir}')
@@ -271,9 +320,10 @@ if __name__ == "__main__":
     total_inference_seconds = 0.0
 
     for img_id in test_img_indices:
-        print(f'Processing {img_id}')
+        print(f'Processing {img_id}')# Отладочный вывод 
+        print(f'Expected path: {rgb_pattern.format(img_id)}')  # Отладочный вывод пути 
         # [H, W, C] RGB
-        img = read_rgb_img(rgb_pattern.format(img_id))
+        img = read_rgb_img(rgb_pattern.format(img_id)) # Использование img_id для подстановки
         start_seconds = time.time()
         # coords in (r, c)
         pred_nodes, pred_edges, itsc_mask, road_mask = infer_one_img(net, img, config)
@@ -287,6 +337,8 @@ if __name__ == "__main__":
             gt_nodes = np.zeros([0, 2], dtype=np.float32)
 
         if config.DATASET == 'spacenet':
+# CHANGES
+        # if config.DATASET == 'spacenet' or 'ekb':
             # convert ??? -> xy -> rc
             gt_nodes = np.stack([gt_nodes[:, 1], 400 - gt_nodes[:, 0]], axis=1)
             gt_nodes = gt_nodes[:, ::-1]
@@ -328,7 +380,10 @@ if __name__ == "__main__":
         viz_img = triage.visualize_image_and_graph(viz_img, pred_nodes / img_size, pred_edges, viz_img.shape[0])
         cv2.imwrite(os.path.join(viz_save_dir, f'{img_id}.png'), viz_img)
 
+
+# CHANGES
         # Saves the large map
+        #if config.DATASET == 'spacenet' or 'ekb':
         if config.DATASET == 'spacenet':
             # r, c -> ???
             pred_nodes = np.stack([400 - pred_nodes[:, 0], pred_nodes[:, 1]], axis=1)
