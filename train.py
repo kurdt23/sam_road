@@ -101,4 +101,7 @@ if __name__ == "__main__":
         # profiler=profiler
         )
 
-    trainer.fit(net, train_dataloaders=train_loader, val_dataloaders=val_loader)
+    # trainer.fit(net, train_dataloaders=train_loader, val_dataloaders=val_loader)
+    
+    trainer.fit(net, train_dataloaders=train_loader, val_dataloaders=val_loader, ckpt_path=args.resume)
+    

@@ -79,7 +79,7 @@ for tile_index in range(180):
     vertex_flag = True
 
     # Load GT Graph
-    gt_graph = pickle.load(open(f"./20cities/region_{tile_index}_refine_gt_graph.p",'rb'))
+    gt_graph = pickle.load(open(f"./CityScale_sam/region_{tile_index}_refine_gt_graph.p",'rb'))
     graph = nx.Graph()  # undirected
     for n, neis in gt_graph.items():
         for nei in neis:

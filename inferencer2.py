@@ -1,3 +1,4 @@
+#
 import numpy as np
 import os
 import imageio
@@ -7,6 +8,7 @@ import cv2
 from utils import load_config, create_output_dir_and_save_config
 from dataset import cityscale_data_partition, read_rgb_img, get_patch_info_one_img
 from dataset import spacenet_data_partition
+from dataset import ekb_data_partition
 from model import SAMRoad
 import graph_extraction
 import graph_utils
@@ -31,8 +33,8 @@ parser.add_argument(
 parser.add_argument(
     "--output_dir", default=None, help="Name of the output dir, if not specified will use timestamp"
 )
-# parser.add_argument("--device", default="cuda", help="device to use for training")
 parser.add_argument("--device", default="cpu", help="device to use for training")
+# parser.add_argument("--device", default="cuda", help="device to use for training")
 args = parser.parse_args()
 
 
@@ -47,15 +49,37 @@ def get_img_paths(root_dir, image_indices):
 
 
 def crop_img_patch(img, x0, y0, x1, y1):
+# CHANGES
+    #img_h, img_w = img.shape[:2]
+    #x0, y0 = max(0, x0), max(0, y0)
+    #x1, y1 = min(img_w, x1), min(img_h, y1)
+    # return img[y0:y1, x0:x1, :]
     return img[y0:y1, x0:x1, :]
 
 
+# def get_batch_img_patches(img, batch_patch_info, patch_size):
 def get_batch_img_patches(img, batch_patch_info):
     patches = []
+    patch_size = 256  # размер патча, который мы ожидаем после заполнения
+    
     for _, (x0, y0), (x1, y1) in batch_patch_info:
         patch = crop_img_patch(img, x0, y0, x1, y1)
+        
+        # Проверяем размер и дополняем до PATCH_SIZE, если необходимо
+        patch_h, patch_w = patch.shape[:2]
+        if patch_h != patch_size or patch_w != patch_size:
+            pad_h = patch_size - patch_h
+            pad_w = patch_size - patch_w
+            patch = np.pad(
+                patch,
+                ((0, max(0, pad_h)), (0, max(0, pad_w)), (0, 0)),
+                mode='constant',
+                constant_values=0
+            )
+        
         print(f'Patch shape after padding: {patch.shape}, coords: {(x0, y0, x1, y1)}')  # Отладочный вывод
         patches.append(torch.tensor(patch, dtype=torch.float32))
+    
     batch = torch.stack(patches, 0).contiguous()
     return batch
 
@@ -85,7 +109,7 @@ def infer_one_img(net, img, config):
     # stores img embeddings for toponet
     # list of [B, D, h, w], len=batch_num
     img_features = list()
-
+    
     for batch_index in range(batch_num):
         offset = batch_index * batch_size
         batch_patch_info = all_patch_info[offset : offset + batch_size]
@@ -104,7 +128,7 @@ def infer_one_img(net, img, config):
             fused_keypoint_mask[y0:y1, x0:x1] += keypoint_patch
             fused_road_mask[y0:y1, x0:x1] += road_patch
             pixel_counter[y0:y1, x0:x1] += torch.ones(road_patch.shape[0:2], dtype=torch.float32, device=args.device)
-    
+       
     fused_keypoint_mask /= pixel_counter
     fused_road_mask /= pixel_counter
     # range 0-1 -> 0-255
@@ -256,15 +280,20 @@ if __name__ == "__main__":
     net.to(device)
 
     if config.DATASET == 'cityscale':
-        _, test_img_indices, _  = cityscale_data_partition()
-        # _, _, test_img_indices = cityscale_data_partition()
+        _, _, test_img_indices = cityscale_data_partition()
         rgb_pattern = './cityscale/CityScale_sam/region_{}_sat.png'
         gt_graph_pattern = 'cityscale/CityScale_sam/region_{}_graph_gt.pickle'
     elif config.DATASET == 'spacenet':
-        _, test_img_indices, _  = spacenet_data_partition()
-        # _, _, test_img_indices = spacenet_data_partition()
+        _, _, test_img_indices = spacenet_data_partition()
         rgb_pattern = './spacenet/SpaceNet_sam/{}__rgb.png'
         gt_graph_pattern = './spacenet/SpaceNet_sam/{}__gt_graph.p'
+        
+    #ekb
+    elif config.DATASET == 'ekb':
+        _, _, test_img_indices = ekb_data_partition()
+        rgb_pattern = './ekb/{}.png'
+        gt_graph_pattern = './ekb/RGB_1.0_meter/{}__gt_graph.p'
+    
     
     output_dir_prefix = './save/infer_'
     if args.output_dir:
@@ -275,10 +304,12 @@ if __name__ == "__main__":
     total_inference_seconds = 0.0
 
     for img_id in test_img_indices:
-        print(f'Processing {img_id}')
-        print(f'Expected path: {rgb_pattern.format(img_id)}')  # Отладочный вывод пути
+# CHANGES    
+        print(f'Processing {img_id}')# Отладочный вывод 
+        print(f'Expected path: {rgb_pattern.format(img_id)}')  # Отладочный вывод пути 
+        
         # [H, W, C] RGB
-        img = read_rgb_img(rgb_pattern.format(img_id))
+        img = read_rgb_img(rgb_pattern.format(img_id)) # Использование img_id для подстановки
         start_seconds = time.time()
         # coords in (r, c)
         pred_nodes, pred_edges, itsc_mask, road_mask = infer_one_img(net, img, config)
@@ -292,6 +323,8 @@ if __name__ == "__main__":
             gt_nodes = np.zeros([0, 2], dtype=np.float32)
 
         if config.DATASET == 'spacenet':
+# CHANGES
+        # if config.DATASET == 'spacenet' or 'ekb':
             # convert ??? -> xy -> rc
             gt_nodes = np.stack([gt_nodes[:, 1], 400 - gt_nodes[:, 0]], axis=1)
             gt_nodes = gt_nodes[:, ::-1]
@@ -333,7 +366,10 @@ if __name__ == "__main__":
         viz_img = triage.visualize_image_and_graph(viz_img, pred_nodes / img_size, pred_edges, viz_img.shape[0])
         cv2.imwrite(os.path.join(viz_save_dir, f'{img_id}.png'), viz_img)
 
+
+# CHANGES 
         # Saves the large map
+        #if config.DATASET == 'spacenet' or 'ekb':
         if config.DATASET == 'spacenet':
             # r, c -> ???
             pred_nodes = np.stack([400 - pred_nodes[:, 0], pred_nodes[:, 1]], axis=1)
@@ -348,8 +384,8 @@ if __name__ == "__main__":
         print(f'Done for {img_id}.')
     
     # log inference time
-    time_txt = f'Inference completed for VALIDATION {args.config} in {total_inference_seconds} seconds.'
-    # time_txt = f'Inference completed for {args.config} in {total_inference_seconds} seconds.'
+    time_txt = f'Inference completed for {args.config} in {total_inference_seconds} seconds.'
     print(time_txt)
     with open(os.path.join(output_dir, 'inference_time.txt'), 'w') as f:
         f.write(time_txt)
+        

@@ -256,13 +256,13 @@ if __name__ == "__main__":
     net.to(device)
 
     if config.DATASET == 'cityscale':
-        _, test_img_indices, _  = cityscale_data_partition()
-        # _, _, test_img_indices = cityscale_data_partition()
+        # _, test_img_indices, _  = cityscale_data_partition()
+        _, _, test_img_indices = cityscale_data_partition()
         rgb_pattern = './cityscale/CityScale_sam/region_{}_sat.png'
         gt_graph_pattern = 'cityscale/CityScale_sam/region_{}_graph_gt.pickle'
     elif config.DATASET == 'spacenet':
-        _, test_img_indices, _  = spacenet_data_partition()
-        # _, _, test_img_indices = spacenet_data_partition()
+        # _, test_img_indices, _  = spacenet_data_partition()
+        _, _, test_img_indices = spacenet_data_partition()
         rgb_pattern = './spacenet/SpaceNet_sam/{}__rgb.png'
         gt_graph_pattern = './spacenet/SpaceNet_sam/{}__gt_graph.p'
     
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         print(f'Done for {img_id}.')
     
     # log inference time
-    time_txt = f'Inference completed for VALIDATION {args.config} in {total_inference_seconds} seconds.'
+    time_txt = f'Inference completed for TEST {args.config} in {total_inference_seconds} seconds.'
     # time_txt = f'Inference completed for {args.config} in {total_inference_seconds} seconds.'
     print(time_txt)
     with open(os.path.join(output_dir, 'inference_time.txt'), 'w') as f:

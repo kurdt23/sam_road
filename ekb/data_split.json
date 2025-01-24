@@ -1,0 +1,23 @@
+{
+  "test": [
+    "rgb_roads1", 
+    "rgb_roads2",
+    "rgb_roads3",
+    "rgb_roads4",
+    "rgb_roads5"
+  ], 
+  "train": [
+    "rgb_roads1", 
+    "rgb_roads2",
+    "rgb_roads3",
+    "rgb_roads4",
+    "rgb_roads5"
+  ], 
+  "validation": [
+    "rgb_roads1", 
+    "rgb_roads2",
+    "rgb_roads3",
+    "rgb_roads4",
+    "rgb_roads5"
+  ]  
+}

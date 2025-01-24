@@ -8,7 +8,9 @@ output_dirs=(
     # "cityscale_toponet_no_tgt_features"
     # "cityscale_toponet_8x8"
     # "cityscale_toponet_4x4"
-    cityscale_toponet_no_itsc
+    # cityscale_toponet_no_itsc
+    # infer__20241203_055702
+    infer__20241203_054630
 )
 
 # Base directory where the output directories are located
@@ -20,7 +22,7 @@ for output_dir in "${output_dirs[@]}"; do
     full_path="$base_dir/$output_dir"
     
     # Run the apls.bash script with the full path to the output directory
-    bash apls.bash "$full_path"
+    # bash apls.bash "$full_path"
     
     # Run the topo.bash script with the full path to the output directory
     bash topo.bash "$full_path"

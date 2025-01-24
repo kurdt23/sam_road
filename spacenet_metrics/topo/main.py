@@ -43,8 +43,8 @@ with open('../spacenet/data_split.json','r') as jf:
 for tile_idx in tile_list:
 
     graph_prop = '../%s/graph/%s.p'%(args.savedir,tile_idx)
-    graph_gt = '../spacenet/RGB_1.0_meter/%s__gt_graph.p'%tile_idx
-    # graph_gt = '../spacenet/RGB_1.0_meter/%s__gt_graph_dense_spacenet.p'%tile_idx
+    graph_gt = '../spacenet/SpaceNet_sam/%s__gt_graph.p'%tile_idx
+    # graph_gt = '../spacenet/SpaceNet_sam/%s__gt_graph_dense_spacenet.p'%tile_idx
     args.output = '../%s/results/topo/%s.txt'%(args.savedir,tile_idx)
     output_dir = os.path.dirname(args.output)
     if not os.path.exists(output_dir):

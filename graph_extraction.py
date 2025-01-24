@@ -201,7 +201,7 @@ if __name__ == '__main__':
     # cost[1, 1] = 1
     # print(pathfinder.get_path(0, 2, 0, 0))
 
-    rgb_pattern = './cityscale/20cities/region_{}_sat.png'
+    rgb_pattern = './cityscale/CityScale_sam/region_{}_sat.png'
     keypoint_mask_pattern = './cityscale/processed/keypoint_mask_{}.png'
     road_mask_pattern = './cityscale/processed/road_mask_{}.png'
 

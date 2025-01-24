@@ -13,7 +13,7 @@ do
     gt_graph=${i}__gt_graph.p
     if test -f "../${dir}/graph/${i}.p"; then
         echo "========================$i======================"
-        python ./apls/convert.py "../${data_dir}/RGB_1.0_meter/${gt_graph}" gt.json
+        python ./apls/convert.py "../${data_dir}/SpaceNet_sam/${gt_graph}" gt.json
         python ./apls/convert.py "../${dir}/graph/${i}.p" prop.json
         
         /usr/local/go/bin/go run ./apls/main.go gt.json prop.json ../$dir/results/apls/$i.txt  spacenet

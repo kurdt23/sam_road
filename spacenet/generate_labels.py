@@ -84,7 +84,7 @@ for data_index, tile_index in enumerate(data_list):
     vertex_flag = True
 
     # Load GT Graph
-    gt_graph = pickle.load(open(f"./RGB_1.0_meter/{tile_index}__gt_graph.p",'rb'))
+    gt_graph = pickle.load(open(f"./SpaceNet_sam/{tile_index}__gt_graph.p",'rb'))
     graph = nx.Graph()  # undirected
     for n, neis in gt_graph.items():
         for nei in neis:

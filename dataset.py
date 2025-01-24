@@ -52,7 +52,129 @@ def spacenet_data_partition():
     test_list = data_list['test']
     return train_list, val_list, test_list
 
+# ekb
 
+def ekb_data_partition():
+    # dataset partition
+    with open('./ekb/data_split.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list
+    
+
+def ekb_data_partition_2048():
+    # dataset partition
+    with open('./ekb/2048/data_split.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list    
+    
+def ekb_data_partition_400():
+    # dataset partition
+    with open('./ekb/400/data_split.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list
+
+
+def ekb_data_partition_2048_x2():
+    # dataset partition
+    with open('./ekb/2048/data_split_x2.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list    
+    
+def ekb_data_partition_400_x2():
+    # dataset partition
+    with open('./ekb/400/data_split_x2.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list
+    
+        
+def ekb_data_partition_2048_x4():
+    # dataset partition
+    with open('./ekb/2048/data_split_x4.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list    
+    
+def ekb_data_partition_400_x4():
+    # dataset partition
+    with open('./ekb/400/data_split_x4.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list
+        
+def ekb2_data_partition_2048():
+    # dataset partition
+    with open('./ekb/ekb2/data_split_2048.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list    
+    
+def ekb2_data_partition_400():
+    # dataset partition
+    with open('./ekb/ekb2/data_split_400.json','r') as jf:
+        data_list = json.load(jf)
+        # data_list = data_list['test'] + data_list['validation'] + data_list['train']
+    # train_list = [tile_index for _, tile_index in data_list['train']]
+    # val_list = [tile_index for _, tile_index in data_list['validation']]
+    # test_list = [tile_index for _, tile_index in data_list['test']]
+    train_list = data_list['train']
+    val_list = data_list['validation']
+    test_list = data_list['test']
+    return train_list, val_list, test_list
+    
+            
 def get_patch_info_one_img(image_index, image_size, sample_margin, patch_size, patches_per_edge):
     patch_info = []
     sample_min = sample_margin
@@ -237,15 +359,15 @@ def test_graph_label_generator():
 
     dataset = 'spacenet'
     if dataset == 'cityscale':
-        rgb_path = './cityscale/20cities/region_166_sat.png'
+        rgb_path = './cityscale/CityScale_sam/region_166_sat.png'
         # Load GT Graph
-        gt_graph = pickle.load(open(f"./cityscale/20cities/region_166_refine_gt_graph.p",'rb'))
+        gt_graph = pickle.load(open(f"./cityscale/CityScale_sam/region_166_refine_gt_graph.p",'rb'))
         coord_transform = lambda v : v[:, ::-1]
     elif dataset == 'spacenet':
-        rgb_path = 'spacenet/RGB_1.0_meter/AOI_2_Vegas_210__rgb.png'
+        rgb_path = 'spacenet/SpaceNet_sam/AOI_2_Vegas_210__rgb.png'
         # Load GT Graph
-        gt_graph = pickle.load(open(f"spacenet/RGB_1.0_meter/AOI_2_Vegas_210__gt_graph.p",'rb'))
-        # gt_graph = pickle.load(open(f"spacenet/RGB_1.0_meter/AOI_4_Shanghai_1061__gt_graph_dense_spacenet.p",'rb'))
+        gt_graph = pickle.load(open(f"spacenet/SpaceNet_sam/AOI_2_Vegas_210__gt_graph.p",'rb'))
+        # gt_graph = pickle.load(open(f"spacenet/SpaceNet_sam/AOI_4_Shanghai_1061__gt_graph_dense_spacenet.p",'rb'))
         
         coord_transform = lambda v : np.stack([v[:, 1], 400 - v[:, 0]], axis=1)
         # coord_transform = lambda v : v[:, ::-1]
@@ -313,10 +435,10 @@ class SatMapDataset(Dataset):
             # TODO: SAMPLE_MARGIN here is for training, the one in config is for inference
             self.SAMPLE_MARGIN = 64
 
-            rgb_pattern = './cityscale/20cities/region_{}_sat.png'
+            rgb_pattern = './cityscale/CityScale_sam/region_{}_sat.png'
             keypoint_mask_pattern = './cityscale/processed/keypoint_mask_{}.png'
             road_mask_pattern = './cityscale/processed/road_mask_{}.png'
-            gt_graph_pattern = './cityscale/20cities/region_{}_refine_gt_graph.p'
+            gt_graph_pattern = './cityscale/CityScale_sam/region_{}_refine_gt_graph.p'
             
             train, val, test = cityscale_data_partition()
 
@@ -328,10 +450,10 @@ class SatMapDataset(Dataset):
             self.IMAGE_SIZE = 400
             self.SAMPLE_MARGIN = 0
 
-            rgb_pattern = './spacenet/RGB_1.0_meter/{}__rgb.png'
+            rgb_pattern = './spacenet/SpaceNet_sam/{}__rgb.png'
             keypoint_mask_pattern = './spacenet/processed/keypoint_mask_{}.png'
             road_mask_pattern = './spacenet/processed/road_mask_{}.png'
-            gt_graph_pattern = './spacenet/RGB_1.0_meter/{}__gt_graph.p'
+            gt_graph_pattern = './spacenet/SpaceNet_sam/{}__gt_graph.p'
             
             train, val, test = spacenet_data_partition()
 

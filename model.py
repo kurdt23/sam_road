@@ -11,11 +11,20 @@ from functools import partial
 from torchmetrics.classification import BinaryJaccardIndex, F1Score, BinaryPrecisionRecallCurve
 
 import lightning.pytorch as pl
-from sam.segment_anything.modeling.image_encoder import ImageEncoderViT
-from sam.segment_anything.modeling.mask_decoder import MaskDecoder
-from sam.segment_anything.modeling.prompt_encoder import PromptEncoder
-from sam.segment_anything.modeling.transformer import TwoWayTransformer
-from sam.segment_anything.modeling.common import LayerNorm2d
+#from ./sam.segment_anything.modeling.image_encoder import ImageEncoderViT
+#from ./sam.segment_anything.modeling.mask_decoder import MaskDecoder
+#from ./sam.segment_anything.modeling.prompt_encoder import PromptEncoder
+#from ./sam.segment_anything.modeling.transformer import TwoWayTransformer
+#from ./sam.segment_anything.modeling.common import LayerNorm2d
+
+import sys
+sys.path.append('/misc/home6/s0181/sam_road/sam/segment_anything')
+
+from modeling.image_encoder import ImageEncoderViT
+from modeling.mask_decoder import MaskDecoder
+from modeling.prompt_encoder import PromptEncoder
+from modeling.transformer import TwoWayTransformer
+from modeling.common import LayerNorm2d
 
 import wandb
 import pprint
@@ -541,7 +550,15 @@ class SAMRoad(pl.LightningModule):
         graph_points, pairs, valid = batch['graph_points'], batch['pairs'], batch['valid']
 
         # masks: [B, H, W, 2] topo: [B, N_samples, N_pairs, 1]
+        
+        #print('rgb=', rgb.dtype, 'graph_points=', graph_points.dtype, 'pairs=', pairs.dtype,'valid=', valid.dtype)
+        #print('rgb=', type(rgb), 'graph_points=', type(graph_points), 'pairs=', type(pairs),'valid=', type(valid))
+        
         mask_logits, mask_scores, topo_logits, topo_scores = self(rgb, graph_points, pairs, valid)
+        
+        #print('mask_log=', type(mask_logits), 'mask_sco=', type(mask_scores), 'topo_log=', type(topo_logits),'topo_sco=', type(topo_scores))
+        #print('mask_log=', mask_logits.dtype, 'mask_sco=', mask_scores.dtype, 'topo_log=', topo_logits.dtype,'topo_sco=', topo_scores.dtype)
+        
 
         gt_masks = torch.stack([keypoint_mask, road_mask], dim=3)
 

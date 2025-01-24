@@ -31,8 +31,8 @@ parser.add_argument(
 parser.add_argument(
     "--output_dir", default=None, help="Name of the output dir, if not specified will use timestamp"
 )
-# parser.add_argument("--device", default="cuda", help="device to use for training")
-parser.add_argument("--device", default="cpu", help="device to use for training")
+parser.add_argument("--device", default="cuda", help="device to use for training")
+# parser.add_argument("--device", default="cpu", help="device to use for training")
 args = parser.parse_args()
 
 
